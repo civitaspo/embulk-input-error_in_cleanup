@@ -14,6 +14,7 @@ import org.embulk.config.ConfigSource;
 import org.embulk.config.Task;
 import org.embulk.config.TaskReport;
 import org.embulk.config.TaskSource;
+import org.embulk.spi.Buffer;
 import org.embulk.spi.BufferAllocator;
 import org.embulk.spi.Exec;
 import org.embulk.spi.FileInputPlugin;
@@ -111,6 +112,7 @@ public class ErrorInCleanupFileInputPlugin
             int taskCount,
             List<TaskReport> successTaskReports)
     {
+        taskSource.loadTask(PluginTask.class);
     }
 
     @Override
@@ -118,24 +120,37 @@ public class ErrorInCleanupFileInputPlugin
     {
         final PluginTask task = taskSource.loadTask(PluginTask.class);
 
-        // Write your code here :)
-        throw new UnsupportedOperationException("ErrorInCleanupFileInputPlugin.open method is not implemented yet");
+        return new TransactionalFileInput() {
+            @Override
+            public Buffer poll()
+            {
+                return null;
+            }
 
-        // if you expect InputStream, you can use this code:
+            @Override
+            public boolean nextFile()
+            {
+                return false;
+            }
 
-        //InputStream input = openInputStream(task, task.getFiles().get(taskIndex));
-        //
-        //return new InputStreamTransactionalFileInput(task.getBufferAllocator(), input) {
-        //    @Override
-        //    public void abort()
-        //    { }
-        //
-        //    @Override
-        //    public TaskReport commit()
-        //    {
-        //        return Exec.newTaskReport();
-        //    }
-        //}
+            @Override
+            public void close()
+            {
+
+            }
+
+            @Override
+            public void abort()
+            {
+
+            }
+
+            @Override
+            public TaskReport commit()
+            {
+                return null;
+            }
+        };
     }
 
     //private static InputStream openInputStream(PluginTask task, String path)

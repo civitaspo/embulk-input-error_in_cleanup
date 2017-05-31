@@ -1,0 +1,20 @@
+in:
+  type: error_in_cleanup
+  option1: 0
+  parser:
+    charset: UTF-8
+    newline: CRLF
+    type: csv
+    delimiter: ','
+    quote: '"'
+    header_line: true
+    stop_on_invalid_record: true
+    columns:
+    - {name: id, type: long}
+    - {name: account, type: long}
+    - {name: time, type: timestamp, format: '%Y-%m-%d %H:%M:%S'}
+    - {name: purchase, type: timestamp, format: '%Y%m%d'}
+    - {name: comment, type: string}
+
+out:
+  type: 'null'
